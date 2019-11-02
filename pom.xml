@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.hongshan</groupId>
+    <artifactId>restServer</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http_2.11</artifactId>
+            <version>10.1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_2.11</artifactId>
+            <version>2.5.23</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http-spray-json_2.11</artifactId>
+            <version>10.1.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.11.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <!--红山内部jar-->
+        <!--D:\SVN\bigdata_platform\lib\base.jar-->
+        <dependency>
+            <groupId>com.hongshan</groupId>
+            <artifactId>base</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hongshan</groupId>
+            <artifactId>configmanager</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hongshan</groupId>
+            <artifactId>database</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hongshan</groupId>
+            <artifactId>datamanager</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hongshan</groupId>
+            <artifactId>managerbridge</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hongshan</groupId>
+            <artifactId>scheduler</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+
+    <!--①无依赖其他任何jar打包-->
+    <!--<build>-->
+        <!--<resources>-->
+            <!--<resource>-->
+                <!--<targetPath>${project.build.directory}/classes</targetPath>-->
+                <!--<directory>src/main/resources</directory>-->
+                <!--<filtering>true</filtering>-->
+                <!--<includes>-->
+                    <!--<include>**/*.xml</include>-->
+                    <!--<include>**/*.conf</include>-->
+                <!--</includes>-->
+            <!--</resource>-->
+        <!--</resources>-->
+
+        <!--<plugins>-->
+            <!--&lt;!&ndash;scala打包插件&ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>net.alchim31.maven</groupId>-->
+                <!--<artifactId>scala-maven-plugin</artifactId>-->
+                <!--<version>3.2.1</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>scala-compile-first</id>-->
+                        <!--<phase>process-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>add-source</goal>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+            <!--&lt;!&ndash;java打包插件&ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>3.1</version>-->
+                <!--<configuration>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                    <!--<encoding>UTF-8</encoding>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>compile</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-jar-plugin</artifactId>-->
+                <!--<version>2.4</version>-->
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<addClasspath>true</addClasspath>-->
+                            <!--<classpathPrefix>lib/</classpathPrefix>-->
+                            <!--<mainClass>com.swordfall.restserver.base.WebServer</mainClass>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
+
+    <!--&lt;!&ndash;②解决依赖第三方，可执行jar的打包，全量打包&ndash;&gt;-->
+    <!--<build>-->
+        <!--<resources>-->
+            <!--<resource>-->
+                <!--<targetPath>${project.build.directory}/classes</targetPath>-->
+                <!--<directory>src/main/resources</directory>-->
+                <!--<filtering>true</filtering>-->
+                <!--<includes>-->
+                    <!--<include>**/*.xml</include>-->
+                    <!--<include>**/*.conf</include>-->
+                <!--</includes>-->
+            <!--</resource>-->
+        <!--</resources>-->
+
+        <!--<plugins>-->
+            <!--&lt;!&ndash;scala打包插件&ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>net.alchim31.maven</groupId>-->
+                <!--<artifactId>scala-maven-plugin</artifactId>-->
+                <!--<version>3.2.1</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>scala-compile-first</id>-->
+                        <!--<phase>process-resources</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>add-source</goal>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+            <!--&lt;!&ndash;java打包插件&ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>3.1</version>-->
+                <!--<configuration>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                    <!--<encoding>UTF-8</encoding>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>compile</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--<version>2.3</version>-->
+                <!--<configuration>-->
+                    <!--<appendAssemblyId>false</appendAssemblyId>-->
+                    <!--<descriptorRefs>-->
+                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+                    <!--</descriptorRefs>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<mainClass>com.swordfall.restserver.base.WebServer</mainClass>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>make-assembly</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>assembly</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
+
+     <!--③maven-assembly-plugin-->
+    <!--<build>
+         <resources>
+             <resource>
+                 <directory>src/main/resources</directory>
+                 <includes>
+                     <include>**/*.properties</include>
+                     <include>**/*.xml</include>
+                 </includes>
+                 &lt;!&ndash; 排除外置的配置文件（运行时注释上，使IDE能读到配置文件；打包时放开注释让配置文件外置，方便修改）可以不配置，maven-jar-plugin下面已配置 &ndash;&gt;
+                 &lt;!&ndash;<excludes>
+                     <exclude>config.properties</exclude>
+                 </excludes>&ndash;&gt;
+             </resource>
+             &lt;!&ndash; 配置文件外置的资源（存放到conf目录，也是classpath路径，下面会配置）&ndash;&gt;
+             &lt;!&ndash;<resource>
+                 <directory>src/main/resources</directory>
+                 <includes>
+                     <include>config.properties</include>
+                 </includes>
+                 <targetPath>${project.build.directory}/conf</targetPath>
+             </resource>&ndash;&gt;
+         </resources>
+
+        <plugins>
+            &lt;!&ndash;scala打包插件&ndash;&gt;
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            &lt;!&ndash;java打包插件&ndash;&gt;
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            &lt;!&ndash;
+                ③打成一个zip包，发布项目的时候，将zip包copy到服务器上，直接unzip xxx.zip，里面包含要运行到的jar以及依赖的lib，还有配置的config文件，即可直接启动服务
+            &ndash;&gt;
+
+            &lt;!&ndash;The configuration of maven-jar-plugin&ndash;&gt;
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-jar-plugin</artifactId>
+                 <version>2.4</version>
+                 &lt;!&ndash;The configuration of the plugin&ndash;&gt;
+                 <configuration>
+                     &lt;!&ndash; 不打包资源文件（配置文件和依赖包分开） &ndash;&gt;
+                     <excludes>
+                         <exclude>*.properties</exclude>
+                         <exclude>*.xml</exclude>
+                         <exclude>*.txt</exclude>
+                     </excludes>
+                     &lt;!&ndash;Configuration of the archiver&ndash;&gt;
+                     <archive>
+                         &lt;!&ndash;生成的jar中，不要包含pom.xml和pom.properties这两个文件&ndash;&gt;
+                         <addMavenDescriptor>false</addMavenDescriptor>
+                         &lt;!&ndash;Manifest specific configuration&ndash;&gt;
+                         <manifest>
+                             &lt;!&ndash;是否把第三方jar放到manifest的classpath中&ndash;&gt;
+                             <addClasspath>true</addClasspath>
+                             &lt;!&ndash;生成的manifest中classpath的前缀，因为要把第三方jar放到lib目录下，所以classpath的前缀是lib/&ndash;&gt;
+                             <classpathPrefix>lib/</classpathPrefix>
+                             &lt;!&ndash;应用的main class&ndash;&gt;
+                             <mainClass>com.swordfall.restserver.base.WebServer</mainClass>
+                         </manifest>
+                         &lt;!&ndash; 给清单文件添加键值对，增加classpath路径，这里将conf目录也设置为classpath路径 &ndash;&gt;
+                         <manifestEntries>
+                             <Class-Path>conf/</Class-Path>
+                         </manifestEntries>
+                     </archive>
+                     &lt;!&ndash;过滤掉不希望包含在jar中的文件&ndash;&gt;
+                    &lt;!&ndash; <excludes>
+                         <exclude>${project.basedir}/xml/*</exclude>
+                     </excludes>&ndash;&gt;
+                 </configuration>
+             </plugin>
+
+             &lt;!&ndash;The configuration of maven-assembly-plugin&ndash;&gt;
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-assembly-plugin</artifactId>
+                 <version>2.4</version>
+                 &lt;!&ndash;The configuration of the plugin&ndash;&gt;
+                 <configuration>
+                     &lt;!&ndash;Specifies the configuration file of the assembly plugin&ndash;&gt;
+                     <descriptors>
+                         <descriptor>src/main/assembly/assembly.xml</descriptor>
+                     </descriptors>
+                 </configuration>
+                 <executions>
+                     <execution>
+                         <id>make-assembly</id>
+                         <phase>package</phase>
+                         <goals>
+                             <goal>single</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>
+        </plugins>
+    </build>-->
+
+     <!--④ maven-shade-plugin-->
+    <build>
+         <resources>
+             <resource>
+                 <targetPath>${project.build.directory}/classes</targetPath>
+                 <directory>src/main/resources</directory>
+                 <filtering>true</filtering>
+                 <includes>
+                     <include>**/*.xml</include>
+                     <include>**/*.conf</include>
+                 </includes>
+             </resource>
+         </resources>
+
+         <plugins>
+             <!--scala打包插件-->
+             <plugin>
+                 <groupId>net.alchim31.maven</groupId>
+                 <artifactId>scala-maven-plugin</artifactId>
+                 <version>3.2.1</version>
+                 <executions>
+                     <execution>
+                         <id>scala-compile-first</id>
+                         <phase>process-resources</phase>
+                         <goals>
+                             <goal>add-source</goal>
+                             <goal>compile</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>
+
+             <!--java打包插件-->
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-compiler-plugin</artifactId>
+                 <version>3.1</version>
+                 <configuration>
+                     <source>1.8</source>
+                     <target>1.8</target>
+                     <encoding>UTF-8</encoding>
+                 </configuration>
+                 <executions>
+                     <execution>
+                         <phase>compile</phase>
+                         <goals>
+                             <goal>compile</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>
+
+             <!-- ④ maven-shade-plugin -->
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-shade-plugin</artifactId>
+                 <version>2.4.3</version>
+                 <executions>
+                     <execution>
+                         <phase>package</phase>
+                         <goals>
+                             <goal>shade</goal>
+                         </goals>
+                         <configuration>
+                             <transformers>
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                     <mainClass>com.hongshan.bdp.restserver.base.WebServer</mainClass>
+                                 </transformer>
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                     <resource>reference.conf</resource>
+                                 </transformer>
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                     <resource>version.conf</resource>
+                                 </transformer>
+                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                     <resource>akka-http-version.conf</resource>
+                                 </transformer>
+                             </transformers>
+                             <shadedArtifactAttached>true</shadedArtifactAttached>
+                             <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+
+                             <!--过滤不需要的jar包-->
+                             <artifactSet>
+                                 <excludes>
+                                     <exclude>io.spray:spray-json_2.11:jar:</exclude>
+                                     <exclude>org.slf4j:slf4j-api:jar:</exclude>
+                                     <exclude>org.slf4j:slf4j-log4j12:jar:</exclude>
+                                     <exclude>log4j:log4j:jar:</exclude>
+                                     <exclude>commons-logging:commons-logging:jar:</exclude>
+                                     <exclude>commons-lang:commons-lang:jar:</exclude>
+                                 </excludes>
+                             </artifactSet>
+                             <minimizeJar>true</minimizeJar>
+                         </configuration>
+                     </execution>
+                 </executions>
+             </plugin>
+         </plugins>
+     </build>
+</project>
